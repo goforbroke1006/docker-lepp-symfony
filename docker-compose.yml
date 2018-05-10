@@ -1,0 +1,30 @@
+version: '2'
+services:
+  web:
+    image: nginx:1.13
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www/html:rw
+      - ./.docker/nginx:/etc/nginx/conf.d/
+  fpm:
+    build: .
+    environment:
+      APP_ENV: "local"
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "9000:9000"
+#  composer:
+#    restart: 'no'
+#    image: composer/composer:php7
+#    command: install
+#    volumes:
+#      - .:/app
+  db:
+    image: postgres:9.6
+    ports:
+      - "15432:5432"
+    environment:
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "12345678"
