@@ -3,9 +3,10 @@
 {% block body %}
     Home page!
 
+{% set hint = "Input your query (min 3 symbols)" %}
 
     <div class="autoCompleteField">
-        <input id="queryBox" title="Input your query (min 3 symbols)"/>
+        <input id="queryBox" title="{{ hint }}" placeholder="{{ hint }}"/>
         <br/>
         <ul id="options"></ul>
     </div>
