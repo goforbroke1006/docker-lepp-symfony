@@ -5,12 +5,12 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./:/var/www/html:rw
+      - ./:/var/www/html
       - ./.docker/nginx:/etc/nginx/conf.d/
   fpm:
     build: .
     environment:
-      APP_ENV: "local"
+      APP_ENV: "dev"
     volumes:
       - ./:/var/www/html
     ports:
