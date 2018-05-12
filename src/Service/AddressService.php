@@ -57,14 +57,19 @@ class AddressService
             if ($oneBy) {
                 $list[] = $oneBy;
             } else {
-                $obj = new Address();
-                $obj->setContent($text);
-                $this->entityManager->persist($obj);
-                $list[] = $obj;
+                try {
+                    $obj = new Address();
+                    $obj->setContent($text);
+                    $this->entityManager->persist($obj);
+                    $this->entityManager->flush();
+                    $list[] = $obj;
+                } catch (UniqueConstraintViolationException $exception) {
+                    //
+                }
             }
         });
 
-        $this->entityManager->flush();
+//        $this->entityManager->flush();
 
         return $list;
     }
