@@ -1,4 +1,5 @@
-version: '2'
+version: '3'
+
 services:
   web:
     image: nginx:1.13
@@ -8,15 +9,17 @@ services:
       - ./:/var/www/html
       - ./.docker/nginx:/etc/nginx/conf.d/
   fpm:
-    build: .
+    build:
+      context: ./
+      dockerfile: Dockerfile
     volumes:
       - ./:/var/www/html
     ports:
       - "9000:9000"
-    links:
-      - db
-    depends_on:
-      - db
+#    links:
+#      - db:postgres
+#    depends_on:
+#      - db
 #  composer:
 #    restart: 'no'
 #    image: composer/composer:php7
@@ -30,3 +33,4 @@ services:
     environment:
       POSTGRES_USER: "root"
       POSTGRES_PASSWORD: "12345678"
+
