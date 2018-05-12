@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Address;
 use App\Repository\AddressRepository;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 
 class AddressService
@@ -66,7 +67,11 @@ class AddressService
             $list[] = $obj;
         });
 
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->flush();
+        }catch (UniqueConstraintViolationException $exception) {
+            return [];
+        }
 
         return $list;
     }
