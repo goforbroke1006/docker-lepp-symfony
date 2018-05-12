@@ -9,12 +9,12 @@ services:
       - ./.docker/nginx:/etc/nginx/conf.d/
   fpm:
     build: .
-    environment:
-      APP_ENV: "dev"
     volumes:
       - ./:/var/www/html
     ports:
       - "9000:9000"
+    links:
+      - db
 #  composer:
 #    restart: 'no'
 #    image: composer/composer:php7
