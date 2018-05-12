@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 
-docker-compose build
+#docker-compose build
+docker-compose down
 docker-compose up -d
 
 sleep 10 # wait when postgres warm up
