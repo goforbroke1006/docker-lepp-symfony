@@ -17,4 +17,5 @@ RUN npm install --global yarn
 RUN apt-get install -y libpq-dev && docker-php-ext-install pdo pdo_pgsql
 RUN docker-php-ext-install pgsql pdo pdo_pgsql
 
-#EXPOSE 9000
+EXPOSE 9000
+WORKDIR /var/www/html

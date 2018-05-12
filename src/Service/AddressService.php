@@ -48,19 +48,24 @@ class AddressService
         $local = $addressRepo->findByQuery($query);
         if (count($local) > 0) return $local;
 
-        $url = 'https://geocode-maps.yandex.ru/1.x/?format=json&geocode=' . $query;
-        $res = file_get_contents($url);
-        $res = json_decode($res, true);
-        $res = $res["response"]["GeoObjectCollection"]["featureMember"];
 
+        $em = $this->entityManager;
         $list = [];
-        foreach ($res as $addr) {
-            $raw = $addr["GeoObject"]["metaDataProperty"]["GeocoderMetaData"]["text"];
+
+        $this->yandexService->matches($query, function ($geoObject, $text) use ($em, $addressRepo, &$list) {
+            $oneBy = $addressRepo->findOneBy(['content' => $text]);
+
+            if ($oneBy) {
+                $list[] = $oneBy;
+                return;
+            }
+
             $obj = new Address();
-            $obj->setContent($raw);
-            $this->entityManager->persist($obj);
+            $obj->setContent($text);
+            $em->persist($obj);
             $list[] = $obj;
-        }
+        });
+
         $this->entityManager->flush();
 
         return $list;

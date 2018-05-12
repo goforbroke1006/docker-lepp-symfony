@@ -21,8 +21,9 @@ class AddressRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('addr');
         $qb->andWhere(
-            $qb->expr()->like('addr.content', $query)
+            $qb->expr()->like('addr.content', ':query')
         );
+        $qb->setParameter('query', "%{$query}%");
         return $qb->getQuery()->getResult();
     }
 }
