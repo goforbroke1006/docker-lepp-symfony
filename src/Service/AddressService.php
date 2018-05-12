@@ -49,29 +49,22 @@ class AddressService
         $local = $addressRepo->findByQuery($query);
         if (count($local) > 0) return $local;
 
-
-        $em = $this->entityManager;
         $list = [];
 
-        $this->yandexService->matches($query, function ($geoObject, $text) use ($em, $addressRepo, &$list) {
+        $this->yandexService->matches($query, function ($geoObject, $text) use ($addressRepo, &$list) {
             $oneBy = $addressRepo->findOneBy(['content' => $text]);
 
             if ($oneBy) {
                 $list[] = $oneBy;
-                return;
+            } else {
+                $obj = new Address();
+                $obj->setContent($text);
+                $this->entityManager->persist($obj);
+                $list[] = $obj;
             }
-
-            $obj = new Address();
-            $obj->setContent($text);
-            $em->persist($obj);
-            $list[] = $obj;
         });
 
-        try {
-            $this->entityManager->flush();
-        }catch (UniqueConstraintViolationException $exception) {
-            return [];
-        }
+        $this->entityManager->flush();
 
         return $list;
     }
